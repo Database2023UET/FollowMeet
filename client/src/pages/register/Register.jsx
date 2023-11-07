@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./Register.scss";
 import axios from "axios";
+import {API_ENDPOINT} from "../../../secret.json";
 
 const Register = () => {
   const [inputs, setInputs] = useState({
@@ -30,10 +31,17 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:8000/server/auth/register", inputs);
-      navigate("/login");
-    } catch (err) {
-      setErr(err.response.data);
+      const res = await axios.post(API_ENDPOINT + "/register", inputs);
+      if (res.status === 200) {
+        alert("Register Successfully");
+        navigate("/login");
+      } else {
+        alert(res.data);
+        navigate("/register");
+      }
+    } catch(err) {
+      alert(err.response.data);
+      navigate("/register");
     }
   };
 
